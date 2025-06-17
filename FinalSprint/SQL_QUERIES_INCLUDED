@@ -1,0 +1,91 @@
+-- Candidate Table
+CREATE TABLE Candidate (
+    id VARCHAR(10) PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    resumePath VARCHAR(255),
+    experienceYears INT
+);
+
+-- Job Table
+CREATE TABLE Job (
+    Job_ID VARCHAR(10) PRIMARY KEY,
+    Title VARCHAR(100),
+    Description TEXT,
+    SkillsRequired VARCHAR(200),
+    ExperienceRequired INT
+);
+
+-- Recruiter Table
+CREATE TABLE Recruiter (
+    Recruiter_ID VARCHAR(10) PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Expertise VARCHAR(100),
+    Hiring_Count INT
+);
+
+-- Interview Table
+CREATE TABLE Interview (
+    Interview_ID VARCHAR(10) PRIMARY KEY,
+    Candidate_ID VARCHAR(10),
+    Job_ID VARCHAR(10),
+    Recruiter_ID VARCHAR(10),
+    Interview_Date DATETIME,
+    Status VARCHAR(50),
+    Feedback TEXT,
+    FOREIGN KEY (Candidate_ID) REFERENCES Candidate(id),
+    FOREIGN KEY (Job_ID) REFERENCES Job(Job_ID),
+    FOREIGN KEY (Recruiter_ID) REFERENCES Recruiter(Recruiter_ID)
+);
+
+-- Candidate_Applied_Jobs Table
+CREATE TABLE Candidate_Applied_Jobs (
+    candidate_id VARCHAR(10) NOT NULL,
+    job_id VARCHAR(10) NOT NULL,
+    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (candidate_id, job_id),
+    FOREIGN KEY (candidate_id) REFERENCES Candidate(id),
+    FOREIGN KEY (job_id) REFERENCES Job(Job_ID)
+);
+
+
+--Insertion
+"INSERT INTO Candidate (id, name, email, resumePath, experienceYears) VALUES (?, ?, ?, ?, ?)"
+"INSERT INTO Recruiter (Recruiter_ID, Name, Email, Expertise, Hiring_Count) VALUES (?, ?, ?, ?, ?)"
+"INSERT INTO Interview (Interview_ID, Candidate_ID, Job_ID, Recruiter_ID, Interview_Date, Status, Feedback) VALUES (?, ?, ?, ?, ?, ?, ?)"
+"INSERT INTO Job (Job_ID, Title, Description, SkillsRequired, ExperienceRequired) VALUES (?, ?, ?, ?, ?)"
+"INSERT INTO candidate_applied_jobs (Candidate_ID, Job_ID) VALUES (?, ?)";
+
+
+--Retrival
+"SELECT * FROM Recruiter WHERE Recruiter_ID = ?";
+"SELECT * FROM Job WHERE Job_ID = ?";
+"SELECT * FROM Candidate WHERE id = ?";
+"SELECT * FROM Interview WHERE Interview_ID = ?";
+"SELECT * FROM Candidate";
+"SELECT * FROM Job";
+"SELECT * FROM Interview";
+"SELECT j.* FROM Job j JOIN candidate_applied_jobs c ON j.Job_ID = c.Job_ID WHERE c.Candidate_ID = ?";
+"SELECT cnd.* FROM Candidate cnd JOIN candidate_applied_jobs caj ON cnd.id = caj.Candidate_ID WHERE caj.Job_ID = ?";
+
+
+
+
+
+
+
+--Updation
+"UPDATE Candidate SET name = ?, email = ?, resumePath = ?, experienceYears = ? WHERE id = ?"
+"UPDATE Job SET Title = ?, Description = ?, SkillsRequired = ?, ExperienceRequired = ? WHERE Job_ID = ?";
+ "UPDATE Recruiter SET Name = ?, Email = ?, Expertise = ?, Hiring_Count = ? WHERE Recruiter_ID = ?";
+"UPDATE Interview SET Candidate_ID = ?, Job_ID = ?, Recruiter_ID = ?, Interview_Date = ?, Status = ?, Feedback = ? WHERE Interview_ID = ?";
+
+
+
+--Deletion
+ "DELETE FROM Candidate WHERE id = ?";
+"DELETE FROM Recruiter WHERE Recruiter_ID = ?"
+"DELETE FROM Job WHERE Job_ID = ?"
+"DELETE FROM Interview WHERE Interview_ID = ?";
+"DELETE FROM candidate_applied_jobs WHERE Candidate_ID = ? AND Job_ID = ?";
