@@ -45,9 +45,7 @@ public class Candidate implements Participate {
 	        return experienceYears;
 	    }
 
-	    public void setExperienceYears(Integer experienceYears) {
-	        this.experienceYears = experienceYears;
-	    }
+	    
 
 	    
 	    public void display() {
