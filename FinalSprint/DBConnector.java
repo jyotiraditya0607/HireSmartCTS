@@ -358,5 +358,76 @@ public class DBConnector {
         }
         return list;
     }
+    
+    //JOB MAPPING
+    public static void applyCandidateToJob(String candidateId, String jobId) {
+        try (Connection conn = getConnection()) {
+            String sql = "INSERT INTO candidate_applied_jobs (Candidate_ID, Job_ID) VALUES (?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, candidateId);
+            stmt.setString(2, jobId);
+            stmt.executeUpdate();
+            System.out.println("Candidate applied to job successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error applying candidate to job: " + e.getMessage());
+        }
+    }
+    public static List<Job> getJobsForCandidate(String candidateId) {
+        List<Job> jobs = new ArrayList<>();
+        try (Connection conn = getConnection()) {
+            String sql = "SELECT j.* FROM Job j JOIN candidate_applied_jobs c ON j.Job_ID = c.Job_ID WHERE c.Candidate_ID = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, candidateId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                jobs.add(new Job(
+                    rs.getString("Job_ID"),
+                    rs.getString("Title"),
+                    rs.getString("Description"),
+                    rs.getString("SkillsRequired"),
+                    rs.getInt("ExperienceRequired")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching jobs for candidate: " + e.getMessage());
+        }
+        return jobs;
+    }
+    public static List<Candidate> getCandidatesForJob(String jobId) {
+        List<Candidate> candidates = new ArrayList<>();
+        try (Connection conn = getConnection()) {
+            String sql = "SELECT cnd.* FROM Candidate cnd JOIN candidate_applied_jobs caj ON cnd.id = caj.Candidate_ID WHERE caj.Job_ID = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, jobId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                candidates.add(new Candidate(
+                    rs.getString("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("resumePath"),
+                    rs.getInt("experienceYears")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching candidates for job: " + e.getMessage());
+        }
+        return candidates;
+    }
+    public static void deleteCandidateJobMapping(String candidateId, String jobId) {
+        try (Connection conn = getConnection()) {
+            String sql = "DELETE FROM candidate_applied_jobs WHERE Candidate_ID = ? AND Job_ID = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, candidateId);
+            stmt.setString(2, jobId);
+            stmt.executeUpdate();
+            System.out.println("Candidate-job mapping deleted.");
+        } catch (SQLException e) {
+            System.out.println("Error deleting mapping: " + e.getMessage());
+        }
+    }
+
+
+
 
 }
