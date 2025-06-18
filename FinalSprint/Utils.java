@@ -1,9 +1,9 @@
 // Utils.java
 package FinalSprint;
-
 import java.io.*;
 import java.time.LocalDateTime;
-
+import java.time.format.DateTimeFormatter;
+import java.time.DateTimeException;
 public class Utils {
 
     public static void uploadResume(String filePath) {
@@ -21,8 +21,16 @@ public class Utils {
         }
     }
 
+    
     public static void logInterviewTime() {
-        LocalDateTime now = LocalDateTime.now();
-        System.out.println("Interview logged at: " + now);
-    }
+        try {
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy 'at' HH:mm:ss");
+
+            String formattedDateTime = now.format(formatter);
+            System.out.println("Interview logged on: " + formattedDateTime);
+
+        } catch (DateTimeException e) {
+            System.out.println("Error while formatting/logging date: " + e.getMessage());
+        }}
 }
