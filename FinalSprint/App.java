@@ -79,19 +79,16 @@ public class App {
                                 String updateId = scanner.nextLine();
                                 Candidate toUpdate = DBConnector.getCandidateById(updateId);
                                 if (toUpdate != null) {
+                                	
                                     System.out.print("Enter new Experience (years): ");
                                     int newExp = scanner.nextInt();
+                                    toUpdate.setExperienceYears(newExp);
                                     scanner.nextLine();
-                                    //updateCandidateById
                                     DBConnector.updateCandidateById(toUpdate);
                                 } else {
                                     System.out.println("Candidate not found.");
                                 }
-                                Candidate candidateToUpdate = DBConnector.getCandidateById("C1");
-                                if (candidateToUpdate != null) {
-                                    candidateToUpdate.setExperienceYears(5);
-                                    DBConnector.updateCandidateById(candidateToUpdate);
-                                }
+                                
                                 break;
 
                             case 5:
